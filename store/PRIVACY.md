@@ -36,4 +36,5 @@ websites' content.
 If this policy changes, the updated version will be published with the extension.
 
 ## Contact
-Questions? Contact the developer at: _[add your contact email before publishing]_
+Questions or privacy concerns? Please open an issue at:
+https://github.com/C1F3RR/tab-volume-booster/issues
