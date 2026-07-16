@@ -1,0 +1,358 @@
+/* Default theme (GX Pink), also the fallback if no theme is set. */
+:root,
+body[data-theme="gxPink"] {
+  --bg: #1a0e18;
+  --panel: #241522;
+  --accent: #ff1b6b;
+  --accent-2: #ff5c8a;
+  --text: #f5eef2;
+  --muted: #9a8592;
+  --track: #3a2433;
+}
+
+body[data-theme="royalPurple"] {
+  --bg: #110a1d;
+  --panel: #1c1130;
+  --accent: #9d4bff;
+  --accent-2: #c08bff;
+  --text: #f2ecff;
+  --muted: #887aa0;
+  --track: #2b1c44;
+}
+
+body[data-theme="iceBlue"] {
+  --bg: #090e19;
+  --panel: #0f1929;
+  --accent: #2e7bff;
+  --accent-2: #6ba6ff;
+  --text: #e9f0ff;
+  --muted: #798aa2;
+  --track: #192843;
+}
+
+body[data-theme="slateMono"] {
+  --bg: #13151a;
+  --panel: #1d2128;
+  --accent: #8a94a6;
+  --accent-2: #b6bfcd;
+  --text: #eef1f5;
+  --muted: #79818e;
+  --track: #2a303a;
+}
+
+body[data-theme="matchaLight"] {
+  --bg: #f3f5ef;
+  --panel: #ffffff;
+  --accent: #3f9d5a;
+  --accent-2: #62b878;
+  --text: #17210f;
+  --muted: #6f7a66;
+  --track: #e0e6d8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  width: 340px;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.wrap {
+  padding: 16px 18px 18px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+}
+
+h1 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: 0.2px;
+  flex: 1;
+}
+
+/* Theme switcher — a row of accent swatches in the header */
+.theme-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.theme-swatch {
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid var(--track);
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+
+.theme-swatch:hover {
+  transform: scale(1.15);
+}
+
+/* "Match browser" swatch — split light/dark */
+.theme-swatch.theme-auto {
+  background: linear-gradient(135deg, #f3f5ef 0 50%, #1a0e18 50% 100%);
+}
+
+.theme-swatch.active {
+  border-color: var(--text);
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--accent-2);
+}
+
+.theme-swatch:focus-visible {
+  outline: 2px solid var(--accent-2);
+  outline-offset: 2px;
+}
+
+.readout {
+  text-align: center;
+  margin: 6px 0 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+#volValue {
+  font-size: 38px;
+  font-weight: 700;
+  color: var(--accent-2);
+}
+
+.pct {
+  font-size: 20px;
+  color: var(--muted);
+  margin-left: 2px;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 4px;
+  background: var(--track);
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--accent-2);
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 0 6px var(--accent);
+}
+
+.ticks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+.presets {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin: 12px 0 6px;
+}
+
+.eq-presets {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.presets button {
+  padding: 7px 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--track);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.presets button:hover {
+  background: color-mix(in srgb, var(--accent) 16%, var(--panel));
+  border-color: var(--accent);
+}
+
+/* Active sound preset (single-select) */
+.eq-presets button.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.band-balance {
+  display: grid;
+  grid-template-columns: 54px 1fr 26px;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0 2px;
+}
+
+.band-balance label {
+  font-size: 12px;
+}
+
+.db {
+  font-size: 11px;
+  color: var(--muted);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.section-label {
+  margin: 14px 0 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-top: 1px solid var(--track);
+  padding-top: 12px;
+}
+
+.custom-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6px;
+}
+
+.custom-row input {
+  padding: 7px 9px;
+  font-size: 12px;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--track);
+  border-radius: 6px;
+  outline: none;
+}
+
+.custom-row input:focus {
+  border-color: var(--accent);
+}
+
+.custom-row button {
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--track);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.custom-row button:hover {
+  border-color: var(--accent);
+}
+
+.preset-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  font-size: 11px;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--track);
+  border-radius: 14px;
+  cursor: pointer;
+}
+
+.chip:hover {
+  border-color: var(--accent);
+}
+
+.chip .x {
+  color: var(--muted);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.chip .x:hover {
+  color: var(--accent-2);
+}
+
+.switch-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 0 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.switch-row b {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.switch-row input {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--accent);
+}
+
+.reset {
+  width: 100%;
+  padding: 8px 0;
+  margin-top: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--track);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.reset:hover {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.status {
+  min-height: 14px;
+  margin: 10px 0 0;
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.status.error {
+  color: #ff8a8a;
+}

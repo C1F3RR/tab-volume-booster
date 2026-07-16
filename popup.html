@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body data-theme="gxPink">
+    <div class="wrap">
+      <div class="header">
+        <span class="dot"></span>
+        <h1>Volume Booster</h1>
+        <div class="theme-row" id="themeRow"></div>
+      </div>
+
+      <div class="readout">
+        <span id="volValue">100</span><span class="pct">%</span>
+      </div>
+
+      <input id="volume" type="range" min="0" max="600" step="10" value="100" />
+      <div class="ticks">
+        <span>0%</span>
+        <span>200%</span>
+        <span>400%</span>
+        <span>600%</span>
+      </div>
+
+      <div class="presets">
+        <button data-vol="100">100%</button>
+        <button data-vol="200">200%</button>
+        <button data-vol="400">400%</button>
+        <button data-vol="600">Max</button>
+      </div>
+
+      <div class="band-balance">
+        <label for="balance">Balance</label>
+        <input id="balance" type="range" min="-100" max="100" step="5" value="0" />
+        <span id="balanceValue" class="db">C</span>
+      </div>
+
+      <div class="section-label">Sound</div>
+      <div class="presets eq-presets">
+        <button data-preset="flat">Normal</button>
+        <button data-preset="bass">Bass</button>
+        <button data-preset="dialogue">Voice</button>
+        <button data-preset="treble">Treble</button>
+        <button data-preset="loudness">Loud</button>
+      </div>
+
+      <div class="section-label">My presets</div>
+      <div class="custom-row">
+        <input id="presetName" type="text" placeholder="Name this setup…" maxlength="24" />
+        <button id="savePreset">Save</button>
+      </div>
+      <div id="presetList" class="preset-list"></div>
+
+      <label class="switch-row">
+        <input type="checkbox" id="remember" />
+        <span>Remember for <b id="host">this site</b></span>
+      </label>
+
+      <button id="reset" class="reset">Reset all</button>
+
+      <p id="status" class="status"></p>
+    </div>
+    <script src="popup.js"></script>
+  </body>
+</html>

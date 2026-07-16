@@ -1,0 +1,44 @@
+{
+  "manifest_version": 3,
+  "name": "Tab Volume Booster",
+  "version": "1.0.0",
+  "description": "Boost the volume of any tab up to 600% using the Web Audio API.",
+  "permissions": [
+    "tabCapture",
+    "offscreen",
+    "activeTab",
+    "storage"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "commands": {
+    "increase-volume": {
+      "suggested_key": { "default": "Ctrl+Shift+Up", "mac": "Command+Shift+Up" },
+      "description": "Increase this tab's volume by 10%"
+    },
+    "decrease-volume": {
+      "suggested_key": { "default": "Ctrl+Shift+Down", "mac": "Command+Shift+Down" },
+      "description": "Decrease this tab's volume by 10%"
+    },
+    "reset-volume": {
+      "description": "Reset this tab's volume to 100%"
+    }
+  },
+  "action": {
+    "default_title": "Tab Volume Booster",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

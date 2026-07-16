@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Volume Booster — Screenshot Framer</title>
+<style>
+  :root{ --bg:#120c11; --panel:#1d141c; --ink:#f3ecf1; --sub:#a89aa4; --line:#2e2330; --accent:#ff1b6b; }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,"Segoe UI",sans-serif}
+  .wrap{max-width:1040px;margin:0 auto;padding:32px 20px 80px}
+  h1{font-size:28px;margin:0 0 6px;letter-spacing:-.02em}
+  p.lede{color:var(--sub);margin:0 0 22px;line-height:1.55;max-width:70ch}
+  .bar{display:flex;flex-wrap:wrap;gap:14px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:26px}
+  .bar label{font-size:13px;color:var(--sub);display:flex;align-items:center;gap:8px}
+  .bar input[type=file]{color:var(--ink);font-size:13px}
+  .bar input[type=color]{width:34px;height:26px;border:1px solid var(--line);border-radius:6px;background:none;cursor:pointer}
+  button{font:600 13px system-ui;color:#fff;background:var(--accent);border:none;border-radius:8px;padding:9px 16px;cursor:pointer}
+  button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+  button:disabled{opacity:.4;cursor:not-allowed}
+  .slide{margin-bottom:30px}
+  .slide .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .slide .head .id{font:600 12px ui-monospace,monospace;color:var(--accent);letter-spacing:.08em}
+  canvas{width:100%;height:auto;display:block;border-radius:12px;border:1px solid var(--line);background:#000}
+  .empty{color:var(--sub);border:1px dashed var(--line);border-radius:12px;padding:60px 20px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Screenshot framer</h1>
+  <p class="lede">Load your real popup screenshot and this builds four polished <b>1280×800</b> store screenshots — branded background, headline, and your actual UI. Open this file directly in your browser (double-click), pick your PNG, then download each. Everything runs locally; nothing is uploaded.</p>
+
+  <div class="bar">
+    <label>Popup PNG: <input id="file" type="file" accept="image/png,image/*" /></label>
+    <label>Accent glow: <input id="accent" type="color" value="#2e7bff" /></label>
+    <button id="all" disabled>Download all 4</button>
+  </div>
+
+  <div id="out"><div class="empty">Choose your popup screenshot to preview the four store images.</div></div>
+</div>
+
+<script>
+  const SLIDES = [
+    { k:"UP TO 600%",        h:"Turn any tab up to 11",     p:"One slider boosts quiet videos, podcasts and lectures — instantly." },
+    { k:"SOUND MODES",       h:"Shape the sound",           p:"Bass, Voice, Treble and Loud — one tap, no fiddly knobs." },
+    { k:"SIX THEMES",        h:"Your look, light or dark",  p:"Pick a theme; the toolbar icon recolors to match." },
+    { k:"PRESETS & MEMORY",  h:"Save it. Remember it.",     p:"Custom presets, per-site memory, and keyboard shortcuts." },
+  ];
+  const W = 1280, H = 800;
+  let img = null;
+
+  function hexToRgb(h){ h=h.replace('#',''); return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
+
+  function wrap(ctx, text, x, y, maxW, lh){
+    const words = text.split(' '); let line=''; let yy=y;
+    for(const w of words){
+      const test = line ? line+' '+w : w;
+      if(ctx.measureText(test).width > maxW && line){ ctx.fillText(line, x, yy); line=w; yy+=lh; }
+      else line=test;
+    }
+    if(line) ctx.fillText(line, x, yy);
+    return yy;
+  }
+
+  function drawSlide(canvas, slide, accent){
+    const ctx = canvas.getContext('2d');
+    // background
+    const bg = ctx.createLinearGradient(0,0,W,H);
+    bg.addColorStop(0,'#171019'); bg.addColorStop(1,'#0c0810');
+    ctx.fillStyle = bg; ctx.fillRect(0,0,W,H);
+    // accent glow behind popup
+    const [r,g,b] = hexToRgb(accent);
+    const glow = ctx.createRadialGradient(950,400,40, 950,400,520);
+    glow.addColorStop(0,`rgba(${r},${g},${b},0.34)`);
+    glow.addColorStop(1,`rgba(${r},${g},${b},0)`);
+    ctx.fillStyle = glow; ctx.fillRect(0,0,W,H);
+    // baseline accent
+    ctx.fillStyle = accent; ctx.fillRect(0,H-8,W,8);
+
+    // text (left)
+    const tx = 110;
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = accent;
+    ctx.font = '700 22px "Segoe UI", system-ui, sans-serif';
+    ctx.fillText(slide.k, tx, 250);
+    ctx.fillStyle = '#f5eef2';
+    ctx.font = '700 60px "Segoe UI", system-ui, sans-serif';
+    const afterH = wrap(ctx, slide.h, tx, 320, 520, 66);
+    ctx.fillStyle = '#b6a7b2';
+    ctx.font = '400 26px "Segoe UI", system-ui, sans-serif';
+    wrap(ctx, slide.p, tx, afterH + 56, 500, 36);
+
+    // popup image (right), preserve aspect
+    if(img){
+      const targetH = 660;
+      const scale = targetH / img.naturalHeight;
+      const pw = img.naturalWidth * scale, ph = targetH;
+      const px = W - pw - 130, py = (H - ph)/2;
+      const rad = 18;
+      // shadow plate
+      ctx.save();
+      ctx.shadowColor = 'rgba(0,0,0,0.5)'; ctx.shadowBlur = 45; ctx.shadowOffsetY = 22;
+      ctx.fillStyle = '#000';
+      roundRect(ctx, px, py, pw, ph, rad); ctx.fill();
+      ctx.restore();
+      // clipped image
+      ctx.save();
+      roundRect(ctx, px, py, pw, ph, rad); ctx.clip();
+      ctx.drawImage(img, px, py, pw, ph);
+      ctx.restore();
+    }
+  }
+  function roundRect(ctx,x,y,w,h,r){ ctx.beginPath(); ctx.roundRect(x,y,w,h,r); }
+
+  function render(){
+    const accent = document.getElementById('accent').value;
+    const out = document.getElementById('out');
+    out.innerHTML = '';
+    SLIDES.forEach((s, i) => {
+      const box = document.createElement('div'); box.className='slide';
+      const head = document.createElement('div'); head.className='head';
+      const id = document.createElement('span'); id.className='id'; id.textContent = `SCREENSHOT ${i+1} · 1280×800`;
+      const dl = document.createElement('button'); dl.textContent = 'Download PNG'; dl.disabled = !img;
+      head.append(id, dl); box.appendChild(head);
+      const cv = document.createElement('canvas'); cv.width=W; cv.height=H;
+      box.appendChild(cv); out.appendChild(box);
+      drawSlide(cv, s, accent);
+      dl.addEventListener('click', () => download(cv, `screenshot-${i+1}.png`));
+    });
+    document.getElementById('all').disabled = !img;
+  }
+
+  function download(canvas, name){
+    canvas.toBlob((blob) => {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob); a.download = name;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    }, 'image/png');
+  }
+
+  document.getElementById('file').addEventListener('change', (e) => {
+    const f = e.target.files[0]; if(!f) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      img = new Image();
+      img.onload = render;
+      img.src = reader.result; // data URL — keeps canvas untainted so downloads work
+    };
+    reader.readAsDataURL(f);
+  });
+  document.getElementById('accent').addEventListener('input', render);
+  document.getElementById('all').addEventListener('click', () => {
+    document.querySelectorAll('.slide canvas').forEach((cv, i) => {
+      setTimeout(() => download(cv, `screenshot-${i+1}.png`), i*400);
+    });
+  });
+
+  render();
+</script>
+</body>
+</html>
