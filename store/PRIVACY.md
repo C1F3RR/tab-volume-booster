@@ -36,7 +36,6 @@ websites' content.
 If this policy changes, the updated version will be published with the extension.
 
 ## Contact
-<<<<<<< HEAD
 Questions or privacy concerns? Please open an issue at:
 https://github.com/C1F3RR/tab-volume-booster/issues
 
