@@ -36,4 +36,4 @@ websites' content.
 If this policy changes, the updated version will be published with the extension.
 
 ## Contact
-Questions? Contact the developer at: _[add your contact email before publishing]_
+Questions? Contact the developer at: 123651963+C1F3RR@users.noreply.github.com
